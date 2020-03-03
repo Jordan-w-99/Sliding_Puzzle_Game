@@ -37,17 +37,17 @@ void PuzzleBox::onTimer(UINT nIDEvent) {
 void PuzzleBox::onLButtonDown(UINT nflags, int x, int y) {
 	for (int i = 0; i < divs; i++) {
 		for (int j = 0; j < divs; j++) {
-			tile cur = grid.at(i).at(j);
 
 			int w = gridS / divs;
-			int curX = j * (w + 2) + (800 / 2 - gridS / 2);
-			int curY = i * (w + 2) + (600 / 2 - gridS / 2);
+			int curX = j * (gridS / divs);
+			int curY = i * (gridS / divs);
 
 
 			if (x >= curX && x <= curX + w && y >= curY && y <= curY + w) {
 				// move the tile;
-				cur.startTime = GetTickCount();
+				grid.at(i).at(j).startTime = GetTickCount();
 				getAnimDir(i, j);
+				break;
 			}
 		}
 	}
@@ -62,27 +62,27 @@ void PuzzleBox::getAnimDir(int row, int col) {
 		/*temp = grid.at(row - 1).at(col);
 		grid.at(row - 1).at(col) = grid.at(row).at(col);
 		grid.at(row).at(col) = temp;*/
-		cur.animDir = { up };
+		grid.at(row).at(col).animDir = up;
 	}
 	else if (col + 1 < divs && grid.at(row).at(col + 1).file == L"EMPTY") { // Right is empty
 		/*temp = grid.at(row).at(col + 1);
 		grid.at(row).at(col + 1) = grid.at(row).at(col);
 		grid.at(row).at(col) = temp;*/
-		cur.animDir = { right };
+		grid.at(row).at(col).animDir = right;
 
 	}
 	else if (row + 1 < divs && grid.at(row + 1).at(col).file == L"EMPTY") { // Below is empty
 		/*temp = grid.at(row + 1).at(col);
 		grid.at(row + 1).at(col) = grid.at(row).at(col);
 		grid.at(row).at(col) = temp;*/
-		cur.animDir = { down };
+		grid.at(row).at(col).animDir = down;
 
 	}
 	else if (col - 1 >= 0 && grid.at(row).at(col - 1).file == L"EMPTY") { // Left is empty
 		/*temp = grid.at(row).at(col - 1);
 		grid.at(row).at(col - 1) = grid.at(row).at(col);
 		grid.at(row).at(col) = temp;*/
-		cur.animDir = { left };
+		grid.at(row).at(col).animDir = left;
 
 	}
 
@@ -119,21 +119,24 @@ void PuzzleBox::displayGrid() {
 		for (int j = 0; j < divs; j++) {
 
 			std::wstring fl = grid.at(i).at(j).file;
-			tile cur = grid.at(i).at(j);
+			//tile cur = grid.at(i).at(j);
 
 			int w = gridS / divs;
-			int x = j * (w + 2) + (800 / 2 - gridS / 2);
-			int y = i * (w + 2) + (600 / 2 - gridS / 2);
+			int x = j * (gridS / divs);
+			int y = i * (gridS / divs);
 
-			if (cur.animDir != none) {
-				int diff = GetTickCount() - cur.startTime;
+			if (grid.at(i).at(j).animDir != none) {
+				int diff = GetTickCount() - grid.at(i).at(j).startTime;
+
+				if (diff >= time) {
+					swapTiles(grid.at(i).at(j).animDir, i, j);
+				}
+
 				diff = diff % time;
 
 				int move = pixels * diff / time;
-
-
-
-				switch (cur.animDir){
+						
+				switch (grid.at(i).at(j).animDir){
 				case up:
 					y-=move;
 
@@ -156,5 +159,35 @@ void PuzzleBox::displayGrid() {
 			//drawRectangle(j * w + 20, i * w + 20, w, w, true);
 			drawBitmap(fl.c_str(), x, y, w, w);
 		}
+	}
+}
+
+void PuzzleBox::swapTiles(direction dir, int row, int col) {
+	tile temp;
+	grid.at(row).at(col).animDir = none;
+
+	switch (dir) {
+	case (up):
+		temp = grid.at(row - 1).at(col);
+		grid.at(row - 1).at(col) = grid.at(row).at(col);
+		grid.at(row).at(col) = temp;
+
+		break;
+	case (right):
+		temp = grid.at(row).at(col + 1);
+		grid.at(row).at(col + 1) = grid.at(row).at(col);
+		grid.at(row).at(col) = temp;
+
+		break;
+	case (down):
+		temp = grid.at(row + 1).at(col);
+		grid.at(row + 1).at(col) = grid.at(row).at(col);
+		grid.at(row).at(col) = temp;
+		break;
+	case (left):
+		temp = grid.at(row).at(col - 1);
+		grid.at(row).at(col - 1) = grid.at(row).at(col);
+		grid.at(row).at(col) = temp;
+		break;
 	}
 }

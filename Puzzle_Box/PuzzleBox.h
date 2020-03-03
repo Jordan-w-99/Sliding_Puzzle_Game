@@ -22,7 +22,7 @@ public:
 	int divs = 3;
 	std::vector<std::vector<tile>> grid;
 
-	const int time = 1000;
+	const int time = 500;
 	const int pixels = 100;
 
 	virtual void onDraw();
@@ -34,5 +34,6 @@ public:
 	void getAnimDir(int i, int j);
 	void initGrid();
 	void displayGrid();
+	void swapTiles(direction dir, int row, int col);
 };
 
