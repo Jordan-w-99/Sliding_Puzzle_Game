@@ -1,2 +1,3 @@
 ﻿  PuzzleBox.cpp
+C:\Users\jorda\Documents\Programming\Sliding_Puzzle_Game\Sliding_Puzzle_Game\Puzzle_Box\PuzzleBox.cpp(43,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   Puzzle_Box.vcxproj -> C:\Users\jorda\Documents\Programming\Sliding_Puzzle_Game\Sliding_Puzzle_Game\Debug\Puzzle_Box.exe

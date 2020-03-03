@@ -22,8 +22,10 @@ public:
 	int divs = 3;
 	std::vector<std::vector<tile>> grid;
 
-	const int time = 500;
+	const int time = 300;
 	const int pixels = 100;
+
+	float timer = 0;
 
 	virtual void onDraw();
 	virtual void onLButtonDown(UINT nflags, int x, int y);
@@ -35,5 +37,6 @@ public:
 	void initGrid();
 	void displayGrid();
 	void swapTiles(direction dir, int row, int col);
+	void drawTime();
 };
 
